@@ -1,41 +1,29 @@
+
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.core.validators import FileExtensionValidator, MaxValueValidator
 from datetime import date
+from django.db.models.enums import IntegerChoices
+from django.utils.translation import gettext as _
 # Create your models here.
 
 
-class Skills(models.IntegerChoices):
+class Skills(models.Model):
     '''
     Skills that freelancers work on
-    '''
-    SOFTWARE_ENGINEER = 1
-    CLOUD_ENGINEER = 2
-    DevOps_ENGINEER = 3
-    WEB_DEVELOPER = 4
-    UX_DESIGNER = 5
-    UI_DESIGNER = 6
-    DATA_SCIENTIST = 7
-
-
-class User(AbstractUser):
-    '''
-    base User class, used for authentications
-    in our rest framework
 
     '''
-    class AuthType(models.IntegerChoices):
-        ADMIN = 1
-        EMPOYER = 2
-        FREELANCER = 3
+    skills = (
+        ('SOFTWARE_ENGINEER', 'SOFTWARE_ENGINEER'),
+        ('UI_DESIGNER', 'UI_DESIGNER'),
+        ('DATA_SCIENTIST', 'DATA_SCIENTIST'),
+        ('CLOUD_ENGINEER', 'CLOUD_ENGINEER'),
+        ('DevOps_ENGINEER', 'DevOps_ENGINEER'),
+        ('UX_DESIGNER', 'UX_DESIGNER'),
+        ('WEB_DEVELOPER', 'WEB_DEVELOPER'))
 
-    # type of user
-    user_type = models.IntegerField(
-        choices=AuthType.choices, default=1, blank=False, null=False)
-
-    def __str__(self):
-        return self.AuthType
+    name = models.CharField(max_length=65, choices=skills, blank=False, null=False)
 
 
 class Document(models.Model):
@@ -46,12 +34,31 @@ class Document(models.Model):
     description = models.CharField(max_length=255, blank=True)
     document = models.FileField(upload_to='documents/', blank=True,
                                 validators=[FileExtensionValidator(['pdf'])])
-    uploaded_at = models.DateTimeField(auto_now_add=True,validators=)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+
+class User(AbstractUser):
+    '''
+    base User class, used for authentications
+    in our rest framework
+    @user_groups determines tyoe of user
+    '''
+    class AuthType(models.IntegerChoices):
+        ADMIN = 1
+        EMPOYER = 2
+        FREELANCER = 3
+
+    # type of user
+    user_group = models.IntegerField(
+        choices=AuthType.choices, default=1, blank=False, null=False)
+
+    def __str__(self):
+        return self.AuthType
 
 
 class Freelancer(models.Model):
     """
-    This class represents کارجو
+    This class represents karjoo
     resume is related to the Document where user
     uploads his/her resume. We use foreignKey for connecting
     it to database and make a relation between files and freelancers
@@ -60,6 +67,7 @@ class Freelancer(models.Model):
         MALE = 'M', _('Male')
         FEMALE = 'F', _('Female')
         UNKOWN = 'U', _('Uknown')
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=63, null=False, blank=False)
     family_name = models.CharField(max_length=63, null=False, blank=False)
@@ -72,7 +80,7 @@ class Freelancer(models.Model):
 
 class Employer(models.Model):
     """
-    This class represents کارفرما
+    This class represents karfarma
     fields is related to skills that company is looking for
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -80,4 +88,4 @@ class Employer(models.Model):
     fields = models.ManyToManyField(Skills, blank=True, null=True)
     number = models.CharField(max_length=11, blank=False, null=False)
     foundation_year = models.PositiveSmallIntegerField(
-        max_length=4, blank=False, null=False, validators=MaxValueValidator(date.today().year, "invalid year"),)
+        blank=False, null=False,)

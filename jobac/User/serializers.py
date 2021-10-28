@@ -1,5 +1,3 @@
-from django.contrib.auth import models
-from django.db.models import fields
 from rest_framework import serializers
 from .models import User, Freelancer, Employer
 
@@ -10,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User(username=validated_data['username'],
-                    user_type=validated_data['user_type'],
+                    user_group=validated_data['user_group'],
                     email=validated_data['email'],
                     )
         user.set_password(validated_data['password'])
@@ -27,11 +25,11 @@ class FreelancerSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         username = validated_data['user.username']
-        pasword = validated_data['user.password']
+        password = validated_data['user.password']
         email = validated_data['user.email']
-        user_type = 2
+        user_group = 3
         user_data = {'username': username, 'password': password, 'email': email,
-                     'user_type': user_type}
+                     'user_group': user_group}
 
         user = UserSerializer.create(
             UserSerializer(), validated_data=user_data)
@@ -62,9 +60,9 @@ class EmployerSerializer(serializers.ModelSerializer):
         username = validated_data['user.username']
         email = validated_data['user.email']
         password = validated_data['user.password']
-        user_type = 1
+        user_group = 2
         user_data = {'username': username, 'email': email,
-                     'user_type': user_type, 'password': password}
+                     'user_group': user_group, 'password': password}
         user = UserSerializer.create(
             UserSerializer(), validated_data=user_data)
 
