@@ -23,6 +23,6 @@ class Proposal(models.Model):
     we need to hold it to track freelancer's offers
     """
     job = models.ForeignKey(JobOffer, on_delete=models.DO_NOTHING)
-    # bid = models.FloatField(blank=False, null=False)
-    # isAccepted = models.BooleanField(blank=False, null=False)
+    bid = models.FloatField(blank=False, null=False)
+    is_accepted = models.BooleanField(blank=False, null=False)
     freelancer = models.ForeignKey(Freelancer, models.CASCADE)
