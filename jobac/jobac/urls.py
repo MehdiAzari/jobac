@@ -13,9 +13,24 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path
+from jobac.Job.views import JobOfferCreate, JobOfferDelete, JobOfferDetail, JobOfferList, JobOfferUpdate, ListEmployersProposals, SubmitProposal
+
+from jobac.User.views import EditProfileView, SignUpEmployerView, SignUpFreelancerView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('',include('rest_framework.urls')),
+    path('SignUpEmployer/', SignUpEmployerView.site.urls),
+    path('SignUpFreelancer/', SignUpFreelancerView.site.urls),
+    path('job/', JobOfferList.as_view()),
+    path('job/create/', JobOfferCreate.as_view()),
+    path('job/<pk>/', JobOfferDetail.as_view()),
+    path('job/<pk>/edit/', JobOfferUpdate.as_view()),
+    path('job/<pk>/delete/', JobOfferDelete.as_view()),
+    path('proposals/', ListEmployersProposals.as_view()),
+    path('propose/', SubmitProposal.as_view()),
+    path('profile/', EditProfileView.as_view()),
 ]

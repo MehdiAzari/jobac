@@ -47,6 +47,7 @@ class User(AbstractUser):
         ADMIN = 1
         EMPOYER = 2
         FREELANCER = 3
+        BLACKLISTED = 4
 
     # type of user
     user_group = models.IntegerField(

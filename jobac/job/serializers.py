@@ -19,13 +19,13 @@ class JobOfferSerializer(serializers.ModelSerializer):
         return e
 
     def create(self, validated_data):
-        jobOffer = JobOffer.objects.update_or_create(
+        jobOffer , _ = JobOffer.objects.update_or_create(
             employer=self.context['request'].user.employer, title=validated_data.get('title'),
             deadline=validated_data.get['deadline'],
             fee=validated_data.get('deadline'),
             needs_skills=validated_data.get('needed_skills'),
             image=validated_data.get('image'),
-            hours=validated_data.get('image'))
+            hours=validated_data.get('hours'))
         return jobOffer
 
 

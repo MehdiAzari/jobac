@@ -13,3 +13,6 @@ class isEmployer(permissions.BasePermission):
 class IsFreelancer(permissions.BasePermission):
     def has_permission(self, request):
         return bool(request.user and request.user.user_group == 3)
+class IsNotBlackListed(permissions.BasePermission):
+    def has_permission(self, request):
+        return not bool(request.user and request.user.user_group == 4)

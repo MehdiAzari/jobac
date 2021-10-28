@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import (AllowAny, IsAuthenticated)
+
+from jobac.User.permissions import IsNotBlackListed
 from .serializers import EmployerSerializer, FreelancerSerializer, UserSerializer
 from .models import User, Freelancer, Employer
 from rest_framework.response import Response
@@ -44,7 +46,7 @@ class SignUpEmployerView(generics.CreateAPIView):
 
 
 class EditProfileView(generics.RetrieveUpdateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsNotBlackListed]
 
     def get_object(self):
         if self.request.user.user_group == 2:
