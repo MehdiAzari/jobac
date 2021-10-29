@@ -100,7 +100,7 @@ class JobOfferList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     filter_backends = [filters.OrderingFilter,
                        filters.SearchFilter, FeeRangeFilter]
-    ordering_fields = ['fee', 'deadline', 'hours', 'fields']
+    ordering_fields = ['fee', 'deadline', 'hours', 'needed_skills']
     search_fields = ['title']
 
 
@@ -158,6 +158,10 @@ class SubmitProposal(generics.CreateAPIView):
 
 
 class ListEmployersProposals(generics.ListAPIView):
+    """
+    this View is lists proposal of freelancers for employer's job.
+    only the owner of posted job has access to this list
+    """
     permission_classes = [IsAuthenticated, isEmployer]
     serializer_class = ProposalListSerializer
 
